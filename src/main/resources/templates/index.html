@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Manager</title>
+  <div class="top-bar">
+    <span th:text="'Welcome ' + ${session.loggedInUser}"></span>
+    <a href="/logout"><button style="margin-left: 20px;">Logout</button></a>
+  </div>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #0a0f3c, #1a1a2e, #0f0f1a);
+      color: #eaeaea;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    h1, h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #f8f9fa;
+    }
+
+    form, ul {
+      width: 90%;
+      max-width: 1000px;
+      background-color: rgba(28, 28, 40, 0.95);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 12px;
+      border: 1px solid #333;
+    }
+
+    input, select, button {
+      padding: 10px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    input, select {
+      background-color: #2f2f3f;
+      color: #eaeaea;
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .inline-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button[type="submit"] {
+      background-color: #4ecdc4;  /* Calm teal */
+      color: #1a1a1a;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #38b7ad;
+      transform: scale(1.03);
+    }
+
+    a button {
+      background-color: #ffb4a2;  /* Soft coral */
+      color: #1a1a1a;
+    }
+
+    a button:hover {
+      background-color: #fca28f;
+      transform: scale(1.03);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: rgba(40, 40, 60, 0.9);
+      border-radius: 10px;
+      border: 1px solid #444;
+    }
+
+    hr {
+      width: 90%;
+      max-width: 1000px;
+      border: 1px solid #444;
+    }
+
+    @media (max-width: 768px) {
+      .inline-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      input, select, button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<h1>Task Manager</h1>
+
+<!-- Add Task Form -->
+<form action="/tasks/add" method="post" class="inline-form">
+  <input type="text" name="title" placeholder="Title" required />
+  <input type="text" name="description" placeholder="Description" required />
+  <select name="status"  required>
+    <option value="" disabled selected>Status</option>
+    <option value="Pending">Pending</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Completed">Completed</option>
+  </select>
+  <input type="date" name="dueDate" required />
+  <button type="submit">Add Task</button>
+</form>
+
+<hr/>
+
+<h2>All Tasks</h2>
+<ul>
+  <li th:each="task : ${tasks}">
+    <form th:action="@{'/tasks/update/' + ${task.id}}" method="post" class="inline-form">
+      <input type="text" name="title" th:value="${task.title}" required />
+      <input type="text" name="description" th:value="${task.description}" required />
+      <select name="status" required>
+        <option value="Pending" th:selected="${task.status == 'Pending'}">Pending</option>
+        <option value="In Progress" th:selected="${task.status == 'In Progress'}">In Progress</option>
+        <option value="Completed" th:selected="${task.status == 'Completed'}">Completed</option>
+      </select>
+      <input type="date" name="dueDate" th:value="${#temporals.format(task.dueDate, 'yyyy-MM-dd')}" required />
+      <button type="submit">Update</button>
+      <a th:href="@{'/tasks/delete/' + ${task.id}}"><button type="button">Delete</button></a>
+    </form>
+  </li>
+</ul>
+</body>
+</html>

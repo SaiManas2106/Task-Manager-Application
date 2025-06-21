@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Task Manager</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #0f3460;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 6px;
+            background: #e0e0e0;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00adb5;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #007b80;
+        }
+        .error-message {
+            background-color: #ff4c4c;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Login to Task Manager</h2>
+
+    <!-- Show error if login failed -->
+    <div th:if="${loginError}" class="error-message" th:text="${loginError}"></div>
+
+    <form th:action="@{/login}" th:object="${user}" method="post">
+        <input type="text" th:field="*{username}" placeholder="Username" required />
+        <input type="password" th:field="*{password}" placeholder="Password" required />
+        <button type="submit">Login</button>
+    </form>
+    <p style="text-align: center; color: #ccc; margin-top: 20px;">© 2025 All Rights Reserved</p>
+</div>
+</body>
+</html>
